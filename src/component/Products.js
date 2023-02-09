@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Dropdown } from "./Dropdown";
 import data from "./ProductCategories.txt";
 export const Products = () => {
-  const [Index, setIndex] = useState([]);//state to hold the array
+  const [Index, setIndex] = useState([]); //state to hold the array
   const [primaryCategory, setPrimaryCategory] = useState([]);
   let arr = [];
   let temp = [];
@@ -12,7 +12,7 @@ export const Products = () => {
     fetch(data)
       .then((res) => res.text())
       .then((data) => {
-        // split method is used to split 
+        // split method is used to split
         temp = data.split("\n");
         temp.forEach((ele) => {
           arr = ele.split(" > ");
@@ -40,8 +40,8 @@ export const Products = () => {
   };
 
   return (
-    <div className="container">
-      <p className="text-lg">Primary Category</p>
+    <div className="container card m-auto mt-4 p-4 shadow rounded border border-success">
+      <h1 className="text-lg text-danger text-center mb-4" >Google Product Taxonomy</h1>
       {/* conditional rendering of a component */}
       {primaryCategory.length > 0
         ? primaryCategory.map((obj, index) => (

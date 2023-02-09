@@ -6,7 +6,7 @@ export const Dropdown = ({ data, method, index }) => {
       {/* check whether the passed object has keys  */}
       {Object.keys(data).length > 0 ? (
         <select
-          className="form-select mb-2"
+          className="form-select mb-3"
           onChange={(e) => {
             method(data, e.target.value, index);
           }}
