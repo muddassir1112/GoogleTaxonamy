@@ -1,57 +1,58 @@
 import React, { useEffect, useState } from "react";
+import { Dropdown } from "./Dropdown";
 import data from "./ProductCategories.txt";
 export const Products = () => {
-  const [Data, setData] = useState([]);
+  const [Index, setIndex] = useState([]);//state to hold the array
   const [primaryCategory, setPrimaryCategory] = useState([]);
-  const [Category1, setCategory1] = useState([]);
+  let arr = [];
+  let temp = [];
+  let obj = {};
+  // useEffect Hook is used to read the text file
   useEffect(() => {
     fetch(data)
       .then((res) => res.text())
       .then((data) => {
-        setData(data.split("\n"));
-        // console.log(data);
+        // split method is used to split 
+        temp = data.split("\n");
+        temp.forEach((ele) => {
+          arr = ele.split(" > ");
+          // function call to create the array of nested objects
+          dropDowns(obj, arr);
+          setPrimaryCategory([...primaryCategory, obj]);
+        });
       });
-    Data.forEach((ele) => {
-      if (!ele.includes(">")) {
-        primaryCategory.push(ele);
-        setPrimaryCategory([...primaryCategory]);
-      }
-    });
-  }, [Data.length]);
-  const handleSelect1 = (e) => {
-    // console.log(e.target.value);
-    // console.log(Data);
-    let temp = [];
-    // let TEMP = [];
-    for (let i = 0; i < Data.length; i++) {
-      if (Data[i].includes(e.target.value)) {
-        temp = Data[i].split(">");
-        
-      }
+  }, []);
+  // function to create array of nested objects
+  const dropDowns = (obj, arr) => {
+    for (let i = 0; i < arr.length; i++) {
+      obj = obj[arr[i]] = obj[arr[i]] || {};
     }
-    // for (let i = 0; i < temp.length; i++) {
-    //   for (let j = 0; j < temp[i].length-1; j++) {
-    //     if(temp[i][j].includes(e.target.value)){
-    //      TEMP.push(temp[i][j+1])
-    //     }else console.log("No")
-    //   }
-    // }
-    console.log(temp)
-    setCategory1([...Category1]);
-    // console.log(TEMP)
   };
+  // function to select the target value
+  const handleSelect = (data, value, index) => {
+    if (JSON.stringify(Index).includes(index)) {
+      primaryCategory.splice(index + 1, primaryCategory.length - index);
+      setPrimaryCategory([...primaryCategory]);
+    } else {
+      setIndex([...Index, index]);
+    }
+    setPrimaryCategory([...primaryCategory, data[value]]);
+  };
+
   return (
     <div className="container">
       <p className="text-lg">Primary Category</p>
-      <select className="form-select" onChange={handleSelect1}>
-        <option value="--Select--">Open this select menu</option>
-        {primaryCategory.map((ele, index) => (
-          <option key={index} value={ele}>
-            {" "}
-            {ele}{" "}
-          </option>
-        ))}
-      </select>
+      {/* conditional rendering of a component */}
+      {primaryCategory.length > 0
+        ? primaryCategory.map((obj, index) => (
+            <Dropdown
+              key={index}
+              data={obj}
+              method={handleSelect}
+              index={index}
+            />
+          ))
+        : null}
     </div>
   );
 };
